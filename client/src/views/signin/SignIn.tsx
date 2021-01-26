@@ -6,6 +6,7 @@ import {
 import { Title, TextInput, Button } from 'react-native-paper';
 import { AuthNavProps } from '../../navigation/AuthParamList';
 import { AuthContext } from '../../utils/AuthProvider';
+import { Formik } from 'formik';
 
 const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
   const { signIn } = useContext(AuthContext);
@@ -13,45 +14,54 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
   const [password, setPassword] = React.useState('')
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.logo} source={require('../../assets/images/BeFitLogo.png')}></Image>
-      <Title style={styles.title} >Welcome Back</Title>
+    <Formik
+      initialValues={{
+        email: '',
+        password: '',
+      }}
+      onSubmit={values => console.log(values)}
+    >
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
+        <View style={styles.container}>
+          <Image style={styles.logo} source={require('../../assets/images/BeFitLogo.png')}></Image>
+          <Title style={styles.title} >Welcome Back</Title>
 
-      <TextInput
-        style={styles.emailInput}
-        label="Email"
-        mode="outlined"
-        selectionColor="#F07820"
-        value={email}
-        onChangeText={email => setEmail(email)}
-      />
+          <TextInput
+            style={styles.emailInput}
+            label="Email"
+            mode="outlined"
+            selectionColor="#F07820"
+            value={email}
+            onChangeText={email => setEmail(email)}
+          />
 
-      <TextInput
-        label="Password"
-        mode="outlined"
-        value={password}
-        onChangeText={password => setPassword(password)}
-      />
+          <TextInput
+            label="Password"
+            mode="outlined"
+            value={password}
+            onChangeText={password => setPassword(password)}
+          />
 
-      <Text style={styles.forgotPassword}>Forgot your password?</Text>
+          <Text style={styles.forgotPassword}>Forgot your password?</Text>
 
-      <Button
-        style={styles.loginButton}
-        labelStyle={styles.loginButtonText}
-        mode="contained" uppercase={true}
-        dark={true}
-        onPress={() => signIn()}>
-        login
+          <Button
+            style={styles.loginButton}
+            labelStyle={styles.loginButtonText}
+            mode="contained" uppercase={true}
+            dark={true}
+            onPress={() => signIn()}>
+            login
         </Button>
 
-      <Text
-        style={styles.signup}
-        onPress={() => navigation.navigate('SignUp')}>
-        Don't have an account? Sign Up!
+          <Text
+            style={styles.signup}
+            onPress={() => navigation.navigate('SignUp')}>
+            Don't have an account? Sign Up!
         </Text>
 
-    </View>
-
+        </View>
+      )}
+    </Formik>
   );
 };
 

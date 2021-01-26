@@ -4,6 +4,7 @@ import {
     View, StyleSheet,
 } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import { Formik } from 'formik';
 
 const AddExercise = () => {
     const [exerciseName, setExerciseName] = React.useState('')
@@ -12,52 +13,58 @@ const AddExercise = () => {
     const [notes, setNotes] = React.useState('')
 
     return (
-        <View style={styles.container}>
+        <Formik
+            initialValues={{ email: '' }}
+            onSubmit={values => console.log(values)}
+        >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+                <View style={styles.container}>
 
-            <TextInput
-                label="Exercise Name"
-                mode="outlined"
-                selectionColor="#F07820"
-                value={exerciseName}
-                onChangeText={exerciseName => setExerciseName(exerciseName)}
-            />
+                    <TextInput
+                        label="Exercise Name"
+                        mode="outlined"
+                        selectionColor="#F07820"
+                        value={exerciseName}
+                        onChangeText={exerciseName => setExerciseName(exerciseName)}
+                    />
 
-            <TextInput
-                keyboardType="numeric"
-                label="Number of Sets"
-                mode="outlined"
-                selectionColor="#F07820"
-                value={numOfSets}
-                onChangeText={numOfSets => setNumOfSets(numOfSets)}
-            />
-            <TextInput
-                label="Rest Time"
-                mode="outlined"
-                selectionColor="#F07820"
-                value={restTime}
-                onChangeText={restTime => setRestTime(restTime)}
-            />
-            <TextInput
-                style={styles.multilineInput}
-                label="Notes"
-                mode="outlined"
-                multiline={true}
-                selectionColor="#F07820"
-                value={notes}
-                onChangeText={notes => setNotes(notes)}
-            />
+                    <TextInput
+                        keyboardType="numeric"
+                        label="Number of Sets"
+                        mode="outlined"
+                        selectionColor="#F07820"
+                        value={numOfSets}
+                        onChangeText={numOfSets => setNumOfSets(numOfSets)}
+                    />
+                    <TextInput
+                        label="Rest Time"
+                        mode="outlined"
+                        selectionColor="#F07820"
+                        value={restTime}
+                        onChangeText={restTime => setRestTime(restTime)}
+                    />
+                    <TextInput
+                        style={styles.multilineInput}
+                        label="Notes"
+                        mode="outlined"
+                        multiline={true}
+                        selectionColor="#F07820"
+                        value={notes}
+                        onChangeText={notes => setNotes(notes)}
+                    />
 
-            <Button
-                style={styles.submitButton}
-                labelStyle={styles.submitButtonText}
-                mode="contained" uppercase={true}
-                dark={true}
-                onPress={() => { }}>
-                submit
+                    <Button
+                        style={styles.submitButton}
+                        labelStyle={styles.submitButtonText}
+                        mode="contained" uppercase={true}
+                        dark={true}
+                        onPress={() => { }}>
+                        submit
             </Button>
 
-        </View>
-
+                </View>
+            )}
+        </Formik>
     );
 };
 
