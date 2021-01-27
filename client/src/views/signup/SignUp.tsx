@@ -5,33 +5,14 @@ import {
   Text, View, StyleSheet, Image,
 } from 'react-native';
 import { Title, TextInput, Button, Subheading } from 'react-native-paper';
-import { useMutation } from 'urql';
+import { useRegisterMutation } from '../../generated/graphql';
 import { AuthNavProps } from '../../navigation/AuthParamList';
 import { AuthContext } from '../../utils/AuthProvider';
 
-const REGISTER_MUT =
-  `
-mutation Register($name:String! $password: String! $email:String!){
-  register(options:{name:$name password:$password email:$email}){
-    errors {
-      field
-      message
-    }
-    user{
-      id
-      email
-    }
-  }
-}`;
-
-const SignUpPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
+const SignUpPage = ({ }: AuthNavProps<'SignUp'>) => {
+  const [, register] = useRegisterMutation();
   const { signIn } = useContext(AuthContext);
-  const [name, setName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
-  const [response, register] = useMutation(REGISTER_MUT)
   return (
-
     <Formik
       initialValues={{
         name: '',
@@ -40,13 +21,17 @@ const SignUpPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
       }}
       onSubmit={
         async (values) => {
-          console.log(values);
           const response = await register({ name: values.name, email: values.email, password: values.password });
-          console.log(response.error)
+          if (response.data?.register.errors) {
+
+          } else if (response.data?.register.user) {
+            //worked login
+            signIn(response.data?.register.user)
+          }
         }
       }
     >
-      {({ handleChange, handleBlur, handleSubmit, values }) => (
+      {({ handleChange, handleSubmit, values }) => (
         <View style={styles.container}>
           <Image style={styles.logo} source={require('../../assets/images/BeFitLogo.png')}></Image>
           <Title style={styles.title} >Join The Club</Title>

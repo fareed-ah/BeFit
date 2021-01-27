@@ -7,11 +7,11 @@ import { Title, TextInput, Button } from 'react-native-paper';
 import { AuthNavProps } from '../../navigation/AuthParamList';
 import { AuthContext } from '../../utils/AuthProvider';
 import { Formik } from 'formik';
+import { useLoginMutation } from '../../generated/graphql';
 
 const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
+  const [, login] = useLoginMutation();
   const { signIn } = useContext(AuthContext);
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
 
   return (
     <Formik
@@ -19,7 +19,18 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
         email: '',
         password: '',
       }}
-      onSubmit={values => console.log(values)}
+      onSubmit={
+        async (values) => {
+          const response = await login({ email: values.email, password: values.password });
+          if (response.data?.login.errors) {
+            console.log(response.data.login.errors)
+          } else if (response.data?.login.user) {
+            //worked login
+            console.log(response.data.login.user)
+            signIn(response.data?.login.user)
+          }
+        }
+      }
     >
       {({ handleChange, handleBlur, handleSubmit, values }) => (
         <View style={styles.container}>
@@ -31,15 +42,15 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
             label="Email"
             mode="outlined"
             selectionColor="#F07820"
-            value={email}
-            onChangeText={email => setEmail(email)}
+            value={values.email}
+            onChangeText={handleChange('email')}
           />
 
           <TextInput
             label="Password"
             mode="outlined"
-            value={password}
-            onChangeText={password => setPassword(password)}
+            value={values.password}
+            onChangeText={handleChange('password')}
           />
 
           <Text style={styles.forgotPassword}>Forgot your password?</Text>
@@ -49,7 +60,7 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
             labelStyle={styles.loginButtonText}
             mode="contained" uppercase={true}
             dark={true}
-            onPress={() => signIn()}>
+            onPress={handleSubmit}>
             login
         </Button>
 
@@ -57,7 +68,7 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
             style={styles.signup}
             onPress={() => navigation.navigate('SignUp')}>
             Don't have an account? Sign Up!
-        </Text>
+          </Text>
 
         </View>
       )}
