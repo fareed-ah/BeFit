@@ -48,7 +48,8 @@ const main = async () => {
         context: ({req,res}): MyContext => ({em: orm.em, req,res})
     })
 
-    apolloServer.applyMiddleware({ app });
+    apolloServer.applyMiddleware({
+        app });
 
     app.get('/', (_, res) => {
         res.send("BeFit Homepage");
