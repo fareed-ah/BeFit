@@ -1,52 +1,47 @@
 import { Workout } from "../entities/Workout";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
+import { IdentityMap } from "@mikro-orm/core";
+import { PostgreSqlConnection } from "@mikro-orm/postgresql";
 
 @Resolver()
 export class WorkoutResolver {
     @Query(() => [Workout])
-    workouts(@Ctx() {em} : MyContext): Promise<Workout[]> {
-        return em.find(Workout, {});
+    workouts(): Promise<Workout[]> {
+        return Workout.find();
     }
 
     @Query(() => Workout, {nullable:true})
     workout(
-        @Arg('id',()=> Int) id: number,
-        @Ctx() { em }: MyContext): Promise<Workout | null> {
-        return em.findOne(Workout, { id });
+        @Arg('id') id: number): Promise<Workout | undefined> {
+        return Workout.findOne(id);
     }
 
     @Mutation(() => Workout)
     async createWorkout(
-        @Arg('workoutName',()=> String) workoutName:string,
-        @Ctx() { em }: MyContext): Promise<Workout> {
-        const workout = em.create(Workout, {workoutName})
-        await em.persistAndFlush(workout);
-        return workout;
+        @Arg('workoutName',()=> String) workoutName:string): Promise<Workout> {
+        return Workout.create({workoutName}).save();
     }
 
     @Mutation(() => Workout, {nullable: true})
     async updateWorkout(
         @Arg('id') id:number,
-        @Arg('workoutName',()=> String, {nullable: true}) workoutName:string,
-        @Ctx() { em }: MyContext): Promise<Workout | null> {
-        const workout = await em.findOne(Workout, { id });
+        @Arg('workoutName',()=> String, {nullable: true}) workoutName:string): Promise<Workout | null> {
+        const workout = await Workout.findOne(id);
         if (!workout) {
             return null;
         }
         if (typeof workoutName !== 'undefined') {
-            workout.workoutName = workoutName;
-            await em.persistAndFlush(workout)
+           await Workout.update({ id }, { workoutName });
         }
         return workout;
     }
 
     @Mutation(() => Boolean)
     async deleteWorkout(
-        @Arg('id') id: number,
-        @Ctx() { em }: MyContext
+        @Arg('id') id: number
     ): Promise<boolean> {
-        await em.nativeDelete(Workout, { id });
+        await Workout.delete(id);
         return true;
     }
 }
