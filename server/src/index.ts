@@ -1,7 +1,5 @@
 import 'reflect-metadata';
-import { MikroORM } from "@mikro-orm/core";
 import { __prod__ } from "./constants";
-import microConfig from "./mikro-orm.config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -11,15 +9,24 @@ import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
 import { MyContext } from './types';
+import { createConnection } from 'typeorm';
+import { User } from './entities/User';
+import { Workout } from './entities/Workout';
 
 let RedisStore = connectRedis(session)
 let redisClient = redis.createClient()
 
 const main = async () => {
-    const orm = await MikroORM.init(microConfig);
-    await orm.getMigrator().up();
+    const conn = await createConnection({
+        type: 'postgres',
+        database: 'befit',
+        username:  'fareedahmad',
+        logging: true,
+        synchronize: true,
+        entities: [User, Workout],
+    });
+    
     const app = express();
-
 
     app.use(
         session({
@@ -45,7 +52,7 @@ const main = async () => {
             resolvers: [WorkoutResolver, UserResolver],
             validate: false,
         }),
-        context: ({req,res}): MyContext => ({em: orm.em, req,res})
+        context: ({req,res}) => ({req,res})
     })
 
     apolloServer.applyMiddleware({

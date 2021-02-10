@@ -2,6 +2,7 @@ import { MyContext } from "src/types";
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { User } from "../entities/User";
 import argon2 from 'argon2';
+import { getConnection } from "typeorm";
 
 @InputType()
 class UserRegistrationInput{
@@ -42,25 +43,23 @@ class UserResponse{
 export class UserResolver {
 
     @Query(() => User, { nullable: true })
-    async me(
-       @Ctx()  {req, em}: MyContext 
+    me(
+       @Ctx()  {req}: MyContext 
     ) {
         // you are not logged in
         if (req.session.userId) {
-            return null
+            return null;
         }
 
-        const user = await em.findOne(User, { id: req.session.userId });
-        return user;
+        return User.findOne({ id: req.session.userId });
     }
-
 
     @Mutation(() => UserResponse)
     async login(
         @Arg('options') options: UserLoginInput,
-        @Ctx() { em, req }: MyContext
+        @Ctx() { req }: MyContext
     ):Promise<UserResponse> {
-        const user = await em.findOne(User,  {email: options.email}) 
+        const user = await User.findOne({ where: { email: options.email } })
         if (!user) {
             return {
                 errors: [{
@@ -86,10 +85,10 @@ export class UserResolver {
         return { user };
     }
 
-     @Mutation(() => UserResponse)
+    @Mutation(() => UserResponse)
     async register(
         @Arg('options') options: UserRegistrationInput,
-        @Ctx() { em, req }: MyContext): Promise<UserResponse> {
+        @Ctx() { req }: MyContext): Promise<UserResponse> {
         
         if (options.password.length < 8) {
             return {
@@ -99,16 +98,23 @@ export class UserResolver {
                 }]
             }
         }
-        
+
         const hashedPassword = await argon2.hash(options.password)  
-        const user = em.create(User, {
-            email: options.email,
-            name: options.name,
-            password: hashedPassword
-        })
-         try {
-             await em.persistAndFlush(user);
-         } catch (err) {
+         let user;
+        try {
+             const result = await getConnection().
+                 createQueryBuilder()
+                 .insert()
+                 .into(User)
+                 .values({
+                     email: options.email,
+                     name: options.name,
+                     password: hashedPassword,
+                 }).returning("*")
+                 .execute();
+            console.log('result:', result);
+            user = result.raw[0];
+        } catch (err) {
              if (err.code === '23505') {
                  return {
                      errors: [{
@@ -117,9 +123,9 @@ export class UserResolver {
                      }]
                  }
              }
-         }
+        }
 
-         req.session.userId = user.id;
-         return { user };
+        req.session.userId = user.id;
+        return { user };
     }
 }
