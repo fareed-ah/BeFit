@@ -1,8 +1,7 @@
 import { Workout } from "../entities/Workout";
 import { MyContext } from "src/types";
-import { Arg, Ctx, Int, Mutation, Query, Resolver } from "type-graphql";
-import { IdentityMap } from "@mikro-orm/core";
-import { PostgreSqlConnection } from "@mikro-orm/postgresql";
+import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { isAuth } from "src/middleware/isAuth";
 
 @Resolver()
 export class WorkoutResolver {
@@ -18,12 +17,19 @@ export class WorkoutResolver {
     }
 
     @Mutation(() => Workout)
+    @UseMiddleware(isAuth)
     async createWorkout(
-        @Arg('workoutName',()=> String) workoutName:string): Promise<Workout> {
-        return Workout.create({workoutName}).save();
+        @Arg('workoutName', () => String) workoutName: string,
+        @Ctx() {req}:MyContext)
+        : Promise<Workout> {
+        return Workout.create({
+            workoutName,
+            userId: req.session.userId,
+        }).save();
     }
 
-    @Mutation(() => Workout, {nullable: true})
+    @Mutation(() => Workout, { nullable: true })
+    @UseMiddleware(isAuth)
     async updateWorkout(
         @Arg('id') id:number,
         @Arg('workoutName',()=> String, {nullable: true}) workoutName:string): Promise<Workout | null> {
@@ -38,6 +44,7 @@ export class WorkoutResolver {
     }
 
     @Mutation(() => Boolean)
+    @UseMiddleware(isAuth)
     async deleteWorkout(
         @Arg('id') id: number
     ): Promise<boolean> {
