@@ -15,7 +15,7 @@ const Routes = () => {
         AsyncStorage.getItem('user').then(userString => {
             if (userString) {
                 //decode it
-                signIn()
+                signIn(user)
             }
             setLoading(false)
             console.log(userString)

@@ -156,6 +156,17 @@ export type RegisterMutation = (
   ) }
 );
 
+export type WorkoutsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type WorkoutsQuery = (
+  { __typename?: 'Query' }
+  & { workouts: Array<(
+    { __typename?: 'Workout' }
+    & Pick<Workout, 'workoutName' | 'id' | 'userId'>
+  )> }
+);
+
 
 export const CreateWorkoutDocument = gql`
     mutation CreateWorkout($workoutName: String!) {
@@ -208,4 +219,17 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const WorkoutsDocument = gql`
+    query Workouts {
+  workouts {
+    workoutName
+    id
+    userId
+  }
+}
+    `;
+
+export function useWorkoutsQuery(options: Omit<Urql.UseQueryArgs<WorkoutsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<WorkoutsQuery>({ query: WorkoutsDocument, ...options });
 };

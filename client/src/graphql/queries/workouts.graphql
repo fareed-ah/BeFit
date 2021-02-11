@@ -1,0 +1,7 @@
+query Workouts {
+  workouts {
+    workoutName
+    id
+    userId
+  }
+}
