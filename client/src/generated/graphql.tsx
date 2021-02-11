@@ -23,24 +23,25 @@ export type Query = {
 
 
 export type QueryWorkoutArgs = {
-  id: Scalars['Int'];
+  id: Scalars['Float'];
 };
 
 export type Workout = {
   __typename?: 'Workout';
   id: Scalars['Int'];
+  userId: Scalars['Float'];
+  workoutName: Scalars['String'];
   createdAt: Scalars['String'];
   updatedAt: Scalars['String'];
-  workoutName: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   id: Scalars['Int'];
-  createdAt: Scalars['String'];
-  updatedAt: Scalars['String'];
   name: Scalars['String'];
   email: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
 };
 
 export type Mutation = {
@@ -101,6 +102,19 @@ export type UserRegistrationInput = {
   password: Scalars['String'];
 };
 
+export type CreateWorkoutMutationVariables = Exact<{
+  workoutName: Scalars['String'];
+}>;
+
+
+export type CreateWorkoutMutation = (
+  { __typename?: 'Mutation' }
+  & { createWorkout: (
+    { __typename?: 'Workout' }
+    & Pick<Workout, 'id' | 'createdAt' | 'updatedAt' | 'workoutName' | 'userId'>
+  ) }
+);
+
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -143,6 +157,21 @@ export type RegisterMutation = (
 );
 
 
+export const CreateWorkoutDocument = gql`
+    mutation CreateWorkout($workoutName: String!) {
+  createWorkout(workoutName: $workoutName) {
+    id
+    createdAt
+    updatedAt
+    workoutName
+    userId
+  }
+}
+    `;
+
+export function useCreateWorkoutMutation() {
+  return Urql.useMutation<CreateWorkoutMutation, CreateWorkoutMutationVariables>(CreateWorkoutDocument);
+};
 export const LoginDocument = gql`
     mutation Login($password: String!, $email: String!) {
   login(options: {password: $password, email: $email}) {

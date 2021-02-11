@@ -8,7 +8,6 @@ import { UserResolver } from './resolvers/user';
 import redis from 'redis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
-import { MyContext } from './types';
 import { createConnection } from 'typeorm';
 import { User } from './entities/User';
 import { Workout } from './entities/Workout';
@@ -17,7 +16,7 @@ let RedisStore = connectRedis(session)
 let redisClient = redis.createClient()
 
 const main = async () => {
-    const conn = await createConnection({
+    await createConnection({
         type: 'postgres',
         database: 'befit',
         username:  'fareedahmad',

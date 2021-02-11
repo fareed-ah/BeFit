@@ -3,6 +3,7 @@ import { StackNavigationProp } from "@react-navigation/stack"
 
 export type WorkoutParamList = {
     Workouts: undefined,
+    AddWorkout: undefined,
     ExerciseList: undefined,
     ExerciseDetail: undefined,
     AddExercise: undefined,
