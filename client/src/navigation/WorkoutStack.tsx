@@ -13,6 +13,8 @@ const WorkoutStack = () => {
         <Stack.Navigator initialRouteName="Workouts">
             <Stack.Screen name="Workouts" options={{
             }} component={WorkoutsPage} />
+            <Stack.Screen name="AddWorkout" options={{
+            }} component={WorkoutsPage} />
             <Stack.Screen name="ExerciseList" options={{
             }} component={ExercisesList} />
             <Stack.Screen name="ExerciseDetail" options={{

@@ -1,7 +1,7 @@
 import { Workout } from "../entities/Workout";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
-import { isAuth } from "src/middleware/isAuth";
+import { isAuth } from "../middleware/isAuth";
 
 @Resolver()
 export class WorkoutResolver {

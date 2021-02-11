@@ -1,35 +1,56 @@
+import { Formik } from 'formik';
 import React from 'react';
 
 import {
     View, StyleSheet,
 } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import { useCreateWorkoutMutation } from '../../generated/graphql';
+import { WorkoutStackProps } from '../../navigation/WorkoutParamList';
 
-const AddWorkout = () => {
-    const [workoutName, setWorkoutName] = React.useState('')
-
+const AddWorkout = ({ navigation }: WorkoutStackProps<'AddWorkout'>) => {
+    const [, createWorkout] = useCreateWorkoutMutation();
     return (
-        <View style={styles.container}>
+        <Formik
+            initialValues={{
+                workoutName: '',
+            }}
+            onSubmit={
+                async (values) => {
+                    const { error } = await createWorkout({ workoutName: values.workoutName });
 
-            <TextInput
-                style={styles.workoutNameInput}
-                label="Workout Name"
-                mode="outlined"
-                selectionColor="#F07820"
-                value={workoutName}
-                onChangeText={workoutName => setWorkoutName(workoutName)}
-            />
+                    if (error) {
 
-            <Button
-                style={styles.submitButton}
-                labelStyle={styles.submitButtonText}
-                mode="contained" uppercase={true}
-                dark={true}
-                onPress={() => { }}>
-                submit
+                    } else {
+                        navigation.navigate('Workouts');
+                    }
+                }
+            }
+        >
+            {({ handleChange, handleBlur, handleSubmit, values }) => (
+                <View style={styles.container}>
+
+                    <TextInput
+                        style={styles.workoutNameInput}
+                        label="Workout Name"
+                        mode="outlined"
+                        selectionColor="#F07820"
+                        value={values.workoutName}
+                        onChangeText={handleChange('workoutName')}
+                    />
+
+                    <Button
+                        style={styles.submitButton}
+                        labelStyle={styles.submitButtonText}
+                        mode="contained" uppercase={true}
+                        dark={true}
+                        onPress={handleSubmit}>
+                        create workout
             </Button>
 
-        </View>
+                </View>
+            )}
+        </Formik>
 
     );
 };
