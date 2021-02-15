@@ -1,0 +1,9 @@
+query WorkoutExercises($workoutId: Float!) {
+    exercises(workoutId: $workoutId) {
+      id
+      workoutId
+      exerciseName
+      sets
+      restTime
+  }
+}

@@ -4,9 +4,9 @@ import { StackNavigationProp } from "@react-navigation/stack"
 export type WorkoutParamList = {
     Workouts: undefined,
     AddWorkout: undefined,
-    ExerciseList: undefined,
+    ExerciseList: {workoutId:number},
     ExerciseDetail: undefined,
-    AddExercise: undefined,
+    AddExercise: {workoutId: number},
 }
 
 export type WorkoutStackProps<T extends keyof WorkoutParamList> = {

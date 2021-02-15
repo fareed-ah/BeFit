@@ -5,17 +5,27 @@ import {
 } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import { Formik } from 'formik';
+import { useCreateExerciseMutation } from '../../generated/graphql';
+import { WorkoutStackProps } from '../../navigation/WorkoutParamList';
 
-const AddExercise = () => {
-    const [exerciseName, setExerciseName] = React.useState('')
-    const [numOfSets, setNumOfSets] = React.useState('')
-    const [restTime, setRestTime] = React.useState('')
-    const [notes, setNotes] = React.useState('')
 
+const AddExercise = ({ navigation, route }: WorkoutStackProps<'AddExercise'>) => {
+
+    const [, createExercise] = useCreateExerciseMutation();
+    console.log("Workout id: ", route.params.workoutId)
     return (
         <Formik
-            initialValues={{ email: '' }}
-            onSubmit={values => console.log(values)}
+            initialValues={{ exerciseName: '', sets: '', restTime: '', notes: '' }}
+            onSubmit={
+                async (values) => {
+                    const { error } = await createExercise({ ...values, workoutId: route.params.workoutId });
+
+                    if (error) {
+                        console.log(error.message)
+                    } else {
+                    }
+                }
+            }
         >
             {({ handleChange, handleBlur, handleSubmit, values }) => (
                 <View style={styles.container}>
@@ -24,8 +34,8 @@ const AddExercise = () => {
                         label="Exercise Name"
                         mode="outlined"
                         selectionColor="#F07820"
-                        value={exerciseName}
-                        onChangeText={exerciseName => setExerciseName(exerciseName)}
+                        value={values.exerciseName}
+                        onChangeText={handleChange('exerciseName')}
                     />
 
                     <TextInput
@@ -33,15 +43,15 @@ const AddExercise = () => {
                         label="Number of Sets"
                         mode="outlined"
                         selectionColor="#F07820"
-                        value={numOfSets}
-                        onChangeText={numOfSets => setNumOfSets(numOfSets)}
+                        value={values.sets}
+                        onChangeText={handleChange('numOfSets')}
                     />
                     <TextInput
                         label="Rest Time"
                         mode="outlined"
                         selectionColor="#F07820"
-                        value={restTime}
-                        onChangeText={restTime => setRestTime(restTime)}
+                        value={values.restTime}
+                        onChangeText={handleChange('restTime')}
                     />
                     <TextInput
                         style={styles.multilineInput}
@@ -49,8 +59,8 @@ const AddExercise = () => {
                         mode="outlined"
                         multiline={true}
                         selectionColor="#F07820"
-                        value={notes}
-                        onChangeText={notes => setNotes(notes)}
+                        value={values.notes}
+                        onChangeText={handleChange('notes')}
                     />
 
                     <Button
@@ -58,7 +68,7 @@ const AddExercise = () => {
                         labelStyle={styles.submitButtonText}
                         mode="contained" uppercase={true}
                         dark={true}
-                        onPress={() => { }}>
+                        onPress={handleSubmit}>
                         submit
             </Button>
 

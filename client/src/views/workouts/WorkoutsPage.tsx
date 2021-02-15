@@ -16,14 +16,16 @@ const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
 
   return (
     <View style={styles.container}>
-      {data.workouts.map((workout, index) => (
-        <View>
-          <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList")}>
-            <WorkoutItem key={index} title={workout.workoutName} />
-          </TouchableOpacity>
-          <StyledDivider />
-        </View>
-      ))}
+      { console.log(data)}
+      {
+        data.workouts.map((workout, index) => (
+          <View>
+            <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList", { workoutId: workout.id })}>
+              <WorkoutItem key={index} title={workout.workoutName} />
+            </TouchableOpacity>
+            <StyledDivider />
+          </View>
+        ))}
     </View>
   );
 };

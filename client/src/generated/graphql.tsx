@@ -16,13 +16,28 @@ export type Scalars = {
 
 export type Query = {
   __typename?: 'Query';
-  workouts: Array<Workout>;
+  allWorkouts?: Maybe<Array<Workout>>;
+  workouts?: Maybe<Array<Workout>>;
   workout?: Maybe<Workout>;
   me?: Maybe<User>;
+  users?: Maybe<Array<User>>;
+  allExercises?: Maybe<Array<Exercise>>;
+  exercises?: Maybe<Array<Exercise>>;
+  exercise?: Maybe<Exercise>;
 };
 
 
 export type QueryWorkoutArgs = {
+  id: Scalars['Float'];
+};
+
+
+export type QueryExercisesArgs = {
+  workoutId: Scalars['Float'];
+};
+
+
+export type QueryExerciseArgs = {
   id: Scalars['Float'];
 };
 
@@ -44,6 +59,18 @@ export type User = {
   updatedAt: Scalars['String'];
 };
 
+export type Exercise = {
+  __typename?: 'Exercise';
+  id: Scalars['Int'];
+  workoutId: Scalars['Float'];
+  exerciseName: Scalars['String'];
+  sets: Scalars['String'];
+  restTime: Scalars['String'];
+  notes: Scalars['String'];
+  createdAt: Scalars['String'];
+  updatedAt: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createWorkout: Workout;
@@ -51,6 +78,8 @@ export type Mutation = {
   deleteWorkout: Scalars['Boolean'];
   login: UserResponse;
   register: UserResponse;
+  createExercise: Exercise;
+  deleteExercise: Scalars['Boolean'];
 };
 
 
@@ -79,6 +108,17 @@ export type MutationRegisterArgs = {
   options: UserRegistrationInput;
 };
 
+
+export type MutationCreateExerciseArgs = {
+  workoutId: Scalars['Float'];
+  options: ExerciseInput;
+};
+
+
+export type MutationDeleteExerciseArgs = {
+  id: Scalars['Float'];
+};
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -101,6 +141,30 @@ export type UserRegistrationInput = {
   email: Scalars['String'];
   password: Scalars['String'];
 };
+
+export type ExerciseInput = {
+  exerciseName: Scalars['String'];
+  sets: Scalars['String'];
+  restTime: Scalars['String'];
+  notes: Scalars['String'];
+};
+
+export type CreateExerciseMutationVariables = Exact<{
+  exerciseName: Scalars['String'];
+  sets: Scalars['String'];
+  restTime: Scalars['String'];
+  notes: Scalars['String'];
+  workoutId: Scalars['Float'];
+}>;
+
+
+export type CreateExerciseMutation = (
+  { __typename?: 'Mutation' }
+  & { createExercise: (
+    { __typename?: 'Exercise' }
+    & Pick<Exercise, 'id' | 'exerciseName' | 'sets' | 'restTime' | 'notes' | 'createdAt' | 'updatedAt'>
+  ) }
+);
 
 export type CreateWorkoutMutationVariables = Exact<{
   workoutName: Scalars['String'];
@@ -156,18 +220,51 @@ export type RegisterMutation = (
   ) }
 );
 
+export type WorkoutExercisesQueryVariables = Exact<{
+  workoutId: Scalars['Float'];
+}>;
+
+
+export type WorkoutExercisesQuery = (
+  { __typename?: 'Query' }
+  & { exercises?: Maybe<Array<(
+    { __typename?: 'Exercise' }
+    & Pick<Exercise, 'id' | 'workoutId' | 'exerciseName' | 'sets' | 'restTime'>
+  )>> }
+);
+
 export type WorkoutsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type WorkoutsQuery = (
   { __typename?: 'Query' }
-  & { workouts: Array<(
+  & { workouts?: Maybe<Array<(
     { __typename?: 'Workout' }
     & Pick<Workout, 'workoutName' | 'id' | 'userId'>
-  )> }
+  )>> }
 );
 
 
+export const CreateExerciseDocument = gql`
+    mutation CreateExercise($exerciseName: String!, $sets: String!, $restTime: String!, $notes: String!, $workoutId: Float!) {
+  createExercise(
+    options: {exerciseName: $exerciseName, sets: $sets, restTime: $restTime, notes: $notes}
+    workoutId: $workoutId
+  ) {
+    id
+    exerciseName
+    sets
+    restTime
+    notes
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateExerciseMutation() {
+  return Urql.useMutation<CreateExerciseMutation, CreateExerciseMutationVariables>(CreateExerciseDocument);
+};
 export const CreateWorkoutDocument = gql`
     mutation CreateWorkout($workoutName: String!) {
   createWorkout(workoutName: $workoutName) {
@@ -219,6 +316,21 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const WorkoutExercisesDocument = gql`
+    query WorkoutExercises($workoutId: Float!) {
+  exercises(workoutId: $workoutId) {
+    id
+    workoutId
+    exerciseName
+    sets
+    restTime
+  }
+}
+    `;
+
+export function useWorkoutExercisesQuery(options: Omit<Urql.UseQueryArgs<WorkoutExercisesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<WorkoutExercisesQuery>({ query: WorkoutExercisesDocument, ...options });
 };
 export const WorkoutsDocument = gql`
     query Workouts {
