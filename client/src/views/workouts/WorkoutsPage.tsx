@@ -1,23 +1,31 @@
 import React from 'react';
 import {
-  View, StyleSheet, TouchableOpacity
+  View, StyleSheet, TouchableOpacity, Text
 } from 'react-native';
 import StyledDivider from '../../components/common/Divider';
 import { WorkoutStackProps } from '../../navigation/WorkoutParamList';
 import WorkoutItem from '../../components/workouts/WorkoutItem';
+import { useWorkoutsQuery } from '../../generated/graphql';
+import { ActivityIndicator } from 'react-native-paper';
 
 const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
-  const workouts = ["Push", "Pull", "Legs", "Sick Shoulder Exercises"];
+  const [{ data, fetching, error }] = useWorkoutsQuery({ requestPolicy: "cache-and-network", });
+
+  if (fetching) return <ActivityIndicator animating={true} />;
+  if (error) return <Text>Something went wrong.. {error.message}</Text>;
+
   return (
     <View style={styles.container}>
-      {workouts.map((workout, index) => (
-        <View>
-          <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList")}>
-            <WorkoutItem key={index} title={workout}></WorkoutItem>
-          </TouchableOpacity>
-          <StyledDivider />
-        </View>
-      ))}
+      { console.log(data)}
+      {
+        data.workouts.map((workout, index) => (
+          <View>
+            <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList", { workoutId: workout.id })}>
+              <WorkoutItem key={index} title={workout.workoutName} />
+            </TouchableOpacity>
+            <StyledDivider />
+          </View>
+        ))}
     </View>
   );
 };

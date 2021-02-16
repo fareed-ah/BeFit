@@ -1,0 +1,25 @@
+mutation CreateExercise(
+  $exerciseName: String!
+  $sets: String!
+  $restTime: String!
+  $notes: String!
+  $workoutId: Float!
+) {
+  createExercise(
+    options: {
+      exerciseName: $exerciseName
+      sets: $sets
+      restTime: $restTime
+      notes: $notes
+    }
+    workoutId: $workoutId
+  ) {
+    id
+    exerciseName
+    sets
+    restTime
+    notes
+    createdAt
+    updatedAt
+  }
+}

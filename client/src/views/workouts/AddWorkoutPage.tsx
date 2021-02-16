@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
         marginTop: 50,
     },
 
-
     submitButton: {
         flexDirection: 'column',
         textAlignVertical: "center",

@@ -1,31 +1,38 @@
 import React from 'react';
 import {
-    View, StyleSheet, TouchableOpacity,
+    View, StyleSheet, TouchableOpacity, Text,
 } from 'react-native';
-import { FAB } from 'react-native-paper';
+import { ActivityIndicator, FAB } from 'react-native-paper';
 import StyledDivider from '../../components/common/Divider';
 import { WorkoutStackProps } from '../../navigation/WorkoutParamList';
 import WorkoutItem from '../../components/workouts/WorkoutItem';
+import { useWorkoutExercisesQuery } from '../../generated/graphql';
 
-const ExercisesList = ({ navigation }: WorkoutStackProps<'ExerciseList'>) => {
-    const exercises = ["Bench", "Cables", "Shoulder Press", "Triceps"];
+const ExercisesList = ({ navigation, route }: WorkoutStackProps<'ExerciseList'>) => {
+    const [{ data, fetching, error }] = useWorkoutExercisesQuery({ requestPolicy: "cache-and-network", variables: { workoutId: route.params.workoutId } });
+
+    if (fetching) return <ActivityIndicator animating={true} />;
+    if (error) return <Text>Something went wrong.. {error.message}</Text>;
 
     return (
-
         <View style={styles.container}>
-            {exercises.map((exercise, index) => (
+            {console.log(data)}
+            {data.exercises ? (data.exercises.map((exercise, index) => (
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate("ExerciseDetail")}>
-                        <WorkoutItem key={index} title={exercise} ></WorkoutItem>
+                        <WorkoutItem key={index} title={exercise.exerciseName} ></WorkoutItem>
                     </TouchableOpacity>
                     <StyledDivider />
                 </View>
-            ))}
+            ))) : (<Text>Add an exercise</Text>)}
+
             <FAB
                 style={styles.fab}
                 small
                 icon="plus"
-                onPress={() => { navigation.navigate("AddExercise") }}
+                onPress={() => {
+                    navigation.navigate('AddExercise', { workoutId: route.params.workoutId })
+                }}
             />
         </View>
     );

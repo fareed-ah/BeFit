@@ -5,9 +5,14 @@ import { isAuth } from "../middleware/isAuth";
 
 @Resolver()
 export class WorkoutResolver {
-    @Query(() => [Workout])
-    workouts(): Promise<Workout[]> {
+    @Query(() => [Workout], {nullable:true})
+    allWorkouts(): Promise<Workout[]> {
         return Workout.find();
+    }
+
+    @Query(() => [Workout], {nullable:true})
+    workouts(@Ctx() {req}:MyContext): Promise<Workout[]> {
+        return Workout.find({userId:req.session.userId});
     }
 
     @Query(() => Workout, {nullable:true})
@@ -23,7 +28,7 @@ export class WorkoutResolver {
         @Ctx() {req}:MyContext)
         : Promise<Workout> {
         return Workout.create({
-            workoutName,
+            workoutName: workoutName,
             userId: req.session.userId,
         }).save();
     }
