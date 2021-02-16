@@ -9,15 +9,14 @@ import WorkoutItem from '../../components/workouts/WorkoutItem';
 import { useWorkoutExercisesQuery } from '../../generated/graphql';
 
 const ExercisesList = ({ navigation, route }: WorkoutStackProps<'ExerciseList'>) => {
-    // const exercises = ["Bench", "Cables", "Shoulder Press", "Triceps"];
-    const [{ data, fetching, error }] = useWorkoutExercisesQuery({ variables: { workoutId: route.params.workoutId } });
+    const [{ data, fetching, error }] = useWorkoutExercisesQuery({ requestPolicy: "cache-and-network", variables: { workoutId: route.params.workoutId } });
 
     if (fetching) return <ActivityIndicator animating={true} />;
     if (error) return <Text>Something went wrong.. {error.message}</Text>;
 
     return (
-
         <View style={styles.container}>
+            {console.log(data)}
             {data.exercises ? (data.exercises.map((exercise, index) => (
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate("ExerciseDetail")}>

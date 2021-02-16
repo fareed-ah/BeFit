@@ -128,4 +128,8 @@ export class UserResolver {
         req.session.userId = user.id;
         return { user };
     }
+    @Query(() => [User], {nullable:true})
+    users(): Promise<User[]> {
+        return User.find();
+    }
 }

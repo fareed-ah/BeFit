@@ -9,7 +9,7 @@ import { useWorkoutsQuery } from '../../generated/graphql';
 import { ActivityIndicator } from 'react-native-paper';
 
 const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
-  const [{ data, fetching, error }] = useWorkoutsQuery();
+  const [{ data, fetching, error }] = useWorkoutsQuery({ requestPolicy: "cache-and-network", });
 
   if (fetching) return <ActivityIndicator animating={true} />;
   if (error) return <Text>Something went wrong.. {error.message}</Text>;

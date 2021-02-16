@@ -11,6 +11,8 @@ import connectRedis from 'connect-redis';
 import { createConnection } from 'typeorm';
 import { User } from './entities/User';
 import { Workout } from './entities/Workout';
+import { ExerciseResolver } from './resolvers/exercise';
+import { Exercise } from './entities/Exercise';
 
 let RedisStore = connectRedis(session)
 let redisClient = redis.createClient()
@@ -19,14 +21,14 @@ const main = async () => {
     await createConnection({
         type: 'postgres',
         database: 'befit',
-        username:  'fareedahmad',
+        username: 'fareedahmad',
         logging: true,
         synchronize: true,
-        entities: [User, Workout],
+        entities: [User, Workout, Exercise],
     });
-    
-    const app = express();
 
+    const app = express();
+    
     app.use(
         session({
             name:"qid",
@@ -48,7 +50,7 @@ const main = async () => {
         
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [WorkoutResolver, UserResolver],
+            resolvers: [WorkoutResolver, UserResolver, ExerciseResolver],
             validate: false,
         }),
         context: ({req,res}) => ({req,res})
@@ -56,10 +58,6 @@ const main = async () => {
 
     apolloServer.applyMiddleware({
         app });
-
-    app.get('/', (_, res) => {
-        res.send("BeFit Homepage");
-    })
 
     app.listen(4000, () => {
         console.log('server startedon localhost:4000');
