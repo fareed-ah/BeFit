@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-    <img src="client/src/assets/images/BeFitLogo.png" alt="Logo" width="80" height="80">
+    <img src="client/src/assets/images/BeFitLogo.png" alt="BefitLogo" width="80" height="80">
 
   <h3 align="center">BeFit</h3>
 
@@ -11,7 +11,6 @@
     The perfect workout planner!
   </p>
 </p>
-
 
 
 <!-- TABLE OF CONTENTS -->
