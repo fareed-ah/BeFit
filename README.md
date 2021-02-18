@@ -33,13 +33,14 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This app is for my fellow gym goers who want to keep track of their wokrouts and progress. It allows users to sign up with an account and add workouts with exercises. Each exercise will keep track of previous weights that were used and so you can continualy improve based on your previous workout stats.
+This app is for my fellow gym-goers who want to keep track of their workouts and progress. It allows users to sign up with an account and add workouts with exercises. Each exercise will keep track of previous weights that were used and so you can continualy improve based on your previous workout stats.
 
 ### Built With
 
 * [React Native](https://reactnative.dev/docs/getting-started)
 * [React Native Paper](https://callstack.github.io/react-native-paper/)
 * [Node](https://nodejs.org/en/docs/guides/getting-started-guide/)
+* [PostGres](https://www.postgresql.org/)
 * [Graphql](https://graphql.org/)
 * [Urql](https://formidable.com/open-source/urql/docs/)
 * [Apollo](https://www.apollographql.com/docs/apollo-server/)
