@@ -41,7 +41,7 @@ This app is for my fellow gym goers who want to keep track of their wokrouts and
 * [React Native Paper](https://callstack.github.io/react-native-paper/)
 * [Node](https://nodejs.org/en/docs/guides/getting-started-guide/)
 * [Graphql](https://graphql.org/)
-* [Urql] (https://formidable.com/open-source/urql/docs/)
+* [Urql](https://formidable.com/open-source/urql/docs/)
 * [Apollo](https://www.apollographql.com/docs/apollo-server/)
 * [TypeORM](https://typeorm.io/#/)
 
