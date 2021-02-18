@@ -17,8 +17,6 @@ const BottomNavBar = () => {
                     // You can return any component that you like here!
                     if (route.name === "Workouts") {
                         return <Ionicons name="home-outline" size={size} color={color} />;
-                    } else if (route.name === "Add Workout") {
-                        return <Ionicons name="add-outline" size={size} color={color} />;
                     } else if (route.name === "Profile") {
                         return <Ionicons name="person-outline" size={size} color={color} />;
                     }
@@ -31,7 +29,6 @@ const BottomNavBar = () => {
             }}
         >
             <Tabs.Screen name='Workouts' component={WorkoutStack} />
-            <Tabs.Screen name='Add Workout' component={AddWorkout} />
             <Tabs.Screen name='Profile' component={Profile} />
         </Tabs.Navigator>
     )
