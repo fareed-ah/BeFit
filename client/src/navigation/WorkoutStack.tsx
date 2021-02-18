@@ -5,6 +5,7 @@ import WorkoutsPage from "../views/workouts/WorkoutsPage";
 import ExercisesList from "../views/exercise/ExerciseList";
 import ExerciseDetail from "../views/exercise/ExerciseDetail";
 import AddExercise from "../views/exercise/AddExercise";
+import AddWorkout from "../views/workouts/AddWorkoutPage";
 
 const Stack = createStackNavigator<WorkoutParamList>()
 
@@ -14,7 +15,7 @@ const WorkoutStack = () => {
             <Stack.Screen name="Workouts" options={{
             }} component={WorkoutsPage} />
             <Stack.Screen name="AddWorkout" options={{
-            }} component={WorkoutsPage} />
+            }} component={AddWorkout} />
             <Stack.Screen name="ExerciseList" options={{
             }} component={ExercisesList} />
             <Stack.Screen name="ExerciseDetail" options={{

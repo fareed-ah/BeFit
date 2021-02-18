@@ -6,7 +6,7 @@ import StyledDivider from '../../components/common/Divider';
 import { WorkoutStackProps } from '../../navigation/WorkoutParamList';
 import WorkoutItem from '../../components/workouts/WorkoutItem';
 import { useWorkoutsQuery } from '../../generated/graphql';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, FAB } from 'react-native-paper';
 
 const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
   const [{ data, fetching, error }] = useWorkoutsQuery({ requestPolicy: "cache-and-network", });
@@ -26,6 +26,14 @@ const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
             <StyledDivider />
           </View>
         ))}
+      <FAB
+        style={styles.fab}
+        small
+        icon="plus"
+        onPress={() => {
+          navigation.navigate('AddWorkout')
+        }}
+      />
     </View>
   );
 };
@@ -37,6 +45,13 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingHorizontal: 8,
     backgroundColor: "#FFF",
+  },
+  fab: {
+    backgroundColor: 'tomato',
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0,
   },
 });
 
