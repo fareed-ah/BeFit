@@ -49,6 +49,7 @@ const SignInPage = ({ navigation }: AuthNavProps<'SignIn'>) => {
           <TextInput
             label="Password"
             mode="outlined"
+            textContentType="password"
             value={values.password}
             onChangeText={handleChange('password')}
           />

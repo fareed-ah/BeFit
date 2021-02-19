@@ -13,13 +13,17 @@ const WorkoutStack = () => {
     return (
         <Stack.Navigator initialRouteName="Workouts">
             <Stack.Screen name="Workouts" options={{
+                title: "Workouts"
             }} component={WorkoutsPage} />
             <Stack.Screen name="AddWorkout" options={{
+                title: "Add Workout"
             }} component={AddWorkout} />
-            <Stack.Screen name="ExerciseList" options={{
-            }} component={ExercisesList} />
-            <Stack.Screen name="ExerciseDetail" options={{
-            }} component={ExerciseDetail} />
+            <Stack.Screen name="ExerciseList" options={({ route }) => ({
+                title: route.params.workoutName,
+            })} component={ExercisesList} />
+            <Stack.Screen name="ExerciseDetail" options={({ route }) => ({
+                title: route.params.exerciseName,
+            })} component={ExerciseDetail} />
             <Stack.Screen name="AddExercise" options={{
             }} component={AddExercise} />
         </Stack.Navigator>)
