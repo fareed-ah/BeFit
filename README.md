@@ -21,8 +21,7 @@
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-* [Usage](#usage)
-* [Roadmap](#roadmap)
+
 
 
 
@@ -46,9 +45,7 @@ This app is for my fellow gym-goers who want to keep track of their workouts and
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+Coming soon
 
 ### Prerequisites
 
