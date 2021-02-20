@@ -56,7 +56,14 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 
 <!-- USAGE EXAMPLES -->
-## Usage
+## Screenshots
+<p float="left"> 
+ <img src="client/screenshots/SignIn.png" alt="signIn" width="250">
+  <img src="client/screenshots/Signup.png" alt="signIn" width="250">
+   <img src="client/screenshots/Workouts.png" alt="signIn" width="250">
+    <img src="client/screenshots/Exercises.png" alt="signIn" width="250">
+     <img src="client/screenshots/ExerciseDetail.png" alt="signIn" width="250">
+    </>
 
 
 
