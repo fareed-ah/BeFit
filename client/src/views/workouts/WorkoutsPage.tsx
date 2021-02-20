@@ -20,7 +20,7 @@ const WorkoutsPage = ({ navigation }: WorkoutStackProps<'Workouts'>) => {
       {
         data.workouts.map((workout, index) => (
           <View>
-            <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList", { workoutId: workout.id })}>
+            <TouchableOpacity key={index} onPress={() => navigation.navigate("ExerciseList", { workoutId: workout.id, workoutName: workout.workoutName })}>
               <WorkoutItem key={index} title={workout.workoutName} />
             </TouchableOpacity>
             <StyledDivider />
